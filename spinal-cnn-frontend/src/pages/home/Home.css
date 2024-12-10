@@ -1,0 +1,78 @@
+.home-page {
+    display: block;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    padding: 5rem 0;
+}
+
+.header h1 {
+    font-size: 48px;
+    margin: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.home-page-body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.file-upload-div {
+    width: 70%;
+    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 1rem 0;
+    gap: 3rem;
+}
+
+button {
+    background-color: #24a0ed;
+    color: white;
+    padding: 0rem 1rem;
+    border-radius: 0.5rem;
+    border: #24a0ed solid 1px;
+}
+
+button:hover {
+    animation: fadeIn 0.5s;
+    opacity: 0.75;
+    cursor: pointer;
+}
+
+p {
+    font-size: 16px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    line-height: 10px;
+}
+
+.scan-output {
+    display: flex;
+    border: 0.1px lightgray solid;
+    border-radius: 1rem;
+    justify-content: center;
+    align-items: center;
+    color: gray;
+}
+
+.classify-button {
+    padding: 3rem 0;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.75;
+    }
+
+}

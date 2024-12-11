@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from views import scan_image
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('scan-image/', scan_image, name='scan-image')
 ]

@@ -3,7 +3,7 @@ import './Home.css';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-import { postFiles } from '../../api/api.tsx';
+import { postImage } from '../../api/api.tsx';
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
@@ -13,6 +13,8 @@ registerPlugin(FilePondPluginFileValidateType);
 export default function Home() {
 
     const [uploadedMedia, setUploadedMedia] = useState<File>()
+    const [scanResult, setScanResult] = useState<Boolean>(false)
+    const [scanDescription, setScanDescription] = useState<String>("")
 
     const handleMediaFiles = (newFiles: any) => {
         if (newFiles.length > 0) {
@@ -20,19 +22,29 @@ export default function Home() {
         }
     }
 
+    const handleRemoveFile = (error: any, newFile: any) => {
+        setScanDescription("")
+        setUploadedMedia()
+    }
+
     const submitUpload = async () => {
         const formData = new FormData();
 
-        // TODO: Do not submit unless LD file and Metadata is filled out
         if (uploadedMedia) {
-            for (var i = 0; i < uploadedMedia.length; i++) {
-                formData.append(`scan_image`, uploadedMedia[i])
+            formData.append(`scan_image`, uploadedMedia)
+
+            const result = await postImage(formData)
+            if (result.status == 200) {
+                if (result.data.scan_output) {
+                    setScanDescription("You have Pneumonia.")
+                }
+                else {
+                    setScanDescription("You DO NOT have Pneumonia!")
+                }
             }
         }
 
-        // TODO: Set screen to be unclickable while file is uploading
 
-        const result = await postFiles(formData)
     }
 
     return (
@@ -46,16 +58,21 @@ export default function Home() {
                     <FilePond
                         allowMultiple={true}
                         onupdatefiles={handleMediaFiles}
+                        onremovefile={handleRemoveFile}
                         maxFiles={1}
                         name="files"
                         imagePreviewHeight={200}
                         acceptedFileTypes={["image/*"]} />
                     <div className="scan-output">
-                        <p> Scan Output... </p>
+                        {(scanDescription.length > 0)
+                            ? <p className="black-text"> {scanDescription} </p>
+                            : <p> Scan Output... </p>
+                        }
+
                     </div>
                 </div>
                 <div className="classify-button">
-                    <button onclick={submitUpload}>
+                    <button onClick={submitUpload}>
                         <p> Detect </p>
                     </button>
                 </div>

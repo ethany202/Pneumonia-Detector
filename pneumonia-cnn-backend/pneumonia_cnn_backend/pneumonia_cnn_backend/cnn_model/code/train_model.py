@@ -7,11 +7,11 @@ import os
 current_dir = os.path.dirname(__file__)
 
 # Define paths to training and validation directories
-train_dir = '/kaggle/input/spine-fracture-prediction-from-xrays/cervical fracture/train'
+train_dir = os.path.join(current_dir, '..', 'data/train')
+val_dir = os.path.join(current_dir, '..', 'data/val')
 val_dir = '/kaggle/input/spine-fracture-prediction-from-xrays/cervical fracture/val'
 
 weights_path = os.path.join(current_dir, '..', 'weights', 'vgg16_imagenet.h5')
-log_dir = os.path.join(current_dir, '..', 'logs')
 best_weights_path = os.path.join(current_dir, '..', 'weights', 'my-weights.weights.h5')
 
 def load_datasets():
@@ -45,7 +45,6 @@ def train():
     val_dataset = val_dataset.map(lambda x, y: (normalization_layer(x), y))
 
     # Logging accuracy:
-    tensorboard_callback = TensorBoard(log_dir=log_dir)
 
     cp_callback = tf.keras.callbacks.ModelCheckpoint(
         filepath=weights_path, 
@@ -67,7 +66,7 @@ def train():
         x=train_dataset,
         validation_data=val_dataset,
         epochs=params.EPOCH_SIZE,
-        callbacks=[cp_callback, tensorboard_callback]
+        callbacks=[cp_callback]
     )
 
 def main():

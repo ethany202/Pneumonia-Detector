@@ -61,15 +61,20 @@ export default function Home() {
                         onremovefile={handleRemoveFile}
                         maxFiles={1}
                         name="files"
-                        imagePreviewHeight={200}
+                        imagePreviewHeight={230}
                         acceptedFileTypes={["image/*"]} />
                     <div className="scan-output">
                         {(scanDescription.length > 0)
-                            ? <p className="black-text"> {scanDescription} </p>
-                            : <p> Scan Output... </p>
+                            // ? <p className="black-text"> {scanDescription} </p>
+                            ?
+                            <img src={"http://localhost:8000/media/saliency_latest.jpeg"}></img>
+                            :
+                            <p> Scan Output... </p>
                         }
-
                     </div>
+                </div>
+                <div className="output-text">
+                    {scanDescription && <p className="black-text"> <strong> Prediction: </strong>{scanDescription} </p>}
                 </div>
                 <div className="classify-button">
                     <button onClick={submitUpload}>

@@ -16,9 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import scan_image
+from .views import scan_image, serve_image
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/scan-image/', scan_image, name='scan-image')
+    path('api/scan-image/', scan_image, name='scan-image'),
+    path('image/<int:image_id>/', serve_image, name='serve_image')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

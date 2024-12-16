@@ -1,6 +1,7 @@
 import tensorflow as tf
 from keras.layers import \
-       Conv2D, MaxPool2D, Dropout, Flatten, Dense
+       Conv2D, MaxPool2D, Dropout, Flatten, Dense, BatchNormalization
+from tensorflow.keras.regularizers import l2
 from . import params
 
 class VGGModel(tf.keras.Model):
@@ -56,15 +57,17 @@ class VGGModel(tf.keras.Model):
             layer.trainable = False
 
         self.head = [
-            Conv2D(64, 3, padding="same"),
-            MaxPool2D(2),
-            Flatten(),
-            Dense(512, activation='relu'),
-            Dropout(0.5),
-            Dense(256, activation='relu'),
-            Dropout(0.5),
-            Dense(1, activation='sigmoid')
+              Conv2D(64, 3, padding="same", kernel_regularizer=l2(0.01)),
+              BatchNormalization(),
+              MaxPool2D(2),
+              Flatten(),
+              Dense(64, activation='relu', kernel_regularizer=l2(0.01)),
+              Dropout(0.5),
+              Dense(32, activation='relu'),
+              Dropout(0.5),
+              Dense(1, activation='sigmoid', kernel_regularizer=l2(0.01))
         ]
+
 
         self.vgg16 = tf.keras.Sequential(self.vgg16, name="vgg_base")
         self.head = tf.keras.Sequential(self.head, name="vgg_head")        

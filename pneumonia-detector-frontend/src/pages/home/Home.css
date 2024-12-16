@@ -62,12 +62,25 @@ p {
     color: gray;
 }
 
+
+.scan-output img {
+    height: 90%;
+    border-radius: 0.5rem;
+}
+
 .classify-button {
-    padding: 3rem 0;
+    padding-bottom: 2rem;
 }
 
 .black-text {
     color: black;
+}
+
+.output-text {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 2.5rem 0;
 }
 
 @keyframes fadeIn {

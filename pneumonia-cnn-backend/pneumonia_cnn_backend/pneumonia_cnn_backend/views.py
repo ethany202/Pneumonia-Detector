@@ -23,7 +23,7 @@ def scan_image(request):
         print(has_pneumonia, probability)
 
         if probability < 0:
-            return JsonResponse({"error": "Model weights cannot be fine"}, status=400)
+            return JsonResponse({"error": "Model weights cannot be found"}, status=400)
         else:
             return JsonResponse({"scan_output" : has_pneumonia}, status=200)
 

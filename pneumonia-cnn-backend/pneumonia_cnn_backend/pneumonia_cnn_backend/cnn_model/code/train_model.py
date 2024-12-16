@@ -7,13 +7,16 @@ import os
 current_dir = os.path.dirname(__file__)
 
 # Define paths to training and validation directories
-train_dir = os.path.join(current_dir, '..', 'data/train')
-val_dir = os.path.join(current_dir, '..', 'data/val')
-val_dir = '/kaggle/input/spine-fracture-prediction-from-xrays/cervical fracture/val'
+train_dir = os.path.join(current_dir, '..', 'data', 'train')
+val_dir = os.path.join(current_dir, '..', 'data', 'val')
 
 weights_path = os.path.join(current_dir, '..', 'weights', 'vgg16_imagenet.h5')
 best_weights_path = os.path.join(current_dir, '..', 'weights', 'my-weights.weights.h5')
 
+####
+# NOTE: OUR MODEL WAS TRAINED IN KAGGLE NOTEBOOKS, HOWEVER, WE DECIDED TO PUT THE CODE HERE 
+#       TO SHOW THE ARCHITECTURE AND PRE-PROCESSING DONE
+####
 def load_datasets():
     train_dataset = tf.keras.utils.image_dataset_from_directory(
         train_dir,
@@ -44,18 +47,24 @@ def train():
     train_dataset = train_dataset.map(lambda x, y: (normalization_layer(x), y))
     val_dataset = val_dataset.map(lambda x, y: (normalization_layer(x), y))
 
-    # Logging accuracy:
+    # Adding Data augmentation
+    data_augmentation = tf.keras.Sequential([
+        tf.keras.layers.RandomRotation(0.1),
+        tf.keras.layers.RandomZoom(0.1),
+    ])
+
+    # Preprocessing
+    train_dataset = train_dataset.map(lambda x, y: (data_augmentation(x), y))
 
     cp_callback = tf.keras.callbacks.ModelCheckpoint(
         filepath=weights_path, 
         save_weights_only=True,
         save_best_only=True,
-        monitor='val_loss',
-        mode='min',
+        monitor='val_accuracy',
+        mode='max',
         verbose=1
     )
 
-    # Compile your model (assuming `model` is already defined)
     model.compile(
         optimizer=model.optimizer,
         loss=model.loss_fn,

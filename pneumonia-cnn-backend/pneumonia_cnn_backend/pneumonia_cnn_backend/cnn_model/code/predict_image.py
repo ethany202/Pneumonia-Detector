@@ -6,9 +6,18 @@ import matplotlib.pyplot as plt
 
 current_dir = os.path.dirname(__file__)
 best_model_weights = os.path.join(current_dir, '..', 'weights', 'my-weights.weights.h5')
-# saliency_folder = '/kaggle/working/saliency_maps'
 
 def predict(img, folder_location):
+    '''
+    Predicts the classification of an inputted image with the trained model
+
+    Args:
+        img: Corresponds to the image inputted by the user
+        folder_location: Represents the folder location of where to store the saliency map
+
+    Returns:
+        Tuple containing the probability and classification based on the model
+    '''
     model = VGGModel()
     model(tf.keras.Input(shape=(params.IMG_SIZE, params.IMG_SIZE, 3)))
 
